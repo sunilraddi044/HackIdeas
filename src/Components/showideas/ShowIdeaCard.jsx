@@ -1,22 +1,37 @@
 import { updateDoc, doc } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { db } from "../../firebase/fire";
+import { getLikedIdeas } from "../../utils/getLikedIdeas";
 import classes from "./ShowIdea.module.css";
 
 const ShowIdeaCard = ({ setRenderLike, data, setLikedIdeas, likedIdeas }) => {
   const [sort, setSort] = useState(false);
-  // const [likedIdeas, setLikedIdeas] = useState([]);
+  const employeeID = useSelector((state) => state.addIdeas.user);
 
-  // const likedIdeas = []
+  useEffect(() => {
+    async function getData() {
+      const currentUser = await getLikedIdeas(employeeID);
+      setLikedIdeas(currentUser.likedIdeas);
+    }
+
+    getData();
+  }, []);
 
   const updateLikes = async (id, likes) => {
-    setLikedIdeas((prev) => {
-      return [...prev, id];
-    });
     const ideaDoc = doc(db, "ideas", id);
-    const newLikes = { likes: likes + 1 };
+    const newLikes = { likes: likes + 1, liked: true };
     await updateDoc(ideaDoc, newLikes);
+
+    let currentUser = await getLikedIdeas(employeeID);
+    console.log(currentUser);
+
+    const userDoc = doc(db, "users", currentUser.id);
+    const newLikedList = { likedIdeas: [...currentUser.likedIdeas, id] };
+    await updateDoc(userDoc, newLikedList);
     setRenderLike((prev) => !prev);
+    currentUser = await getLikedIdeas(employeeID);
+    setLikedIdeas(currentUser.likedIdeas);
   };
 
   const sortDataByLikes = (option) => {
@@ -45,7 +60,7 @@ const ShowIdeaCard = ({ setRenderLike, data, setLikedIdeas, likedIdeas }) => {
             <div className="card-body">
               <h5 className="card-title">{idea.title}</h5>
               <p
-                class={`mb-2 text-muted position-absolute ${classes["creation-date"]} `}
+                className={`mb-2 text-muted position-absolute ${classes["creation-date"]} `}
               >
                 created on: {idea.creationDate}
               </p>

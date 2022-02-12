@@ -3,12 +3,16 @@ import { collection, addDoc, getDocs } from "firebase/firestore";
 import { useHistory } from "react-router-dom";
 import { db } from "../../firebase/fire";
 import classes from "./Login.module.css";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/actions/Actions";
+import Loading from "../UI/Loading";
 
 const Login = ({ setLoginStatus }) => {
   const ideaCollectionRef = collection(db, "users");
   const [employeeId, setEmployeeId] = useState([]);
   const history = useHistory();
   const [isLoading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const [signUp, setSignUp] = useState(false);
 
@@ -21,9 +25,14 @@ const Login = ({ setLoginStatus }) => {
   };
 
   const addUserToDB = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    await addDoc(ideaCollectionRef, { employeeId });
+    await addDoc(ideaCollectionRef, { employeeId, likedIdeas: [] });
+
     setEmployeeId("");
+    alert("EmployeeID is added successfully");
+    setSignUp(false);
+    setLoading(false);
   };
 
   const loginHandler = async (e) => {
@@ -34,11 +43,18 @@ const Login = ({ setLoginStatus }) => {
     const a = users.map((user) => user.employeeId);
     if (a.includes(employeeId)) {
       setLoginStatus(true);
+      dispatch(setUser(employeeId));
       history.replace("/showideas");
+      setLoading(false);
     } else {
+      setLoading(false);
       alert("Sorry unrecognized EmployeeId please SignUp ");
     }
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className={`containe ${classes["card-container"]}`}>

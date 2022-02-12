@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase/fire";
 import classes from "./AddIdeaForm.module.css";
+import { useSelector } from "react-redux";
 
 const AddIdeaFrom = () => {
   const ideaCollectionRef = collection(db, "ideas");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [tag, setTag] = useState("");
+  const user = useSelector((state) => state.addIdeas.user);
 
   const date = new Date();
 
@@ -49,6 +51,8 @@ const AddIdeaFrom = () => {
       likes: 0,
       tag,
       creationDate,
+      user,
+      liked: false,
     };
 
     addIdea(idea);
