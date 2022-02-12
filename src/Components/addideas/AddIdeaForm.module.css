@@ -1,0 +1,16 @@
+.form-container {
+  height: 500px;
+  width: 700px;
+  position: relative !important;
+}
+
+.label {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.submit {
+  position: absolute !important;
+  bottom: 50px;
+  right: 50px;
+}
