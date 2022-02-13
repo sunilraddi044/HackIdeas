@@ -1,0 +1,14 @@
+version: "3"
+services:
+  react_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+    environment:
+      - REACT_APP_API_KEY=AIzaSyD6F_haAYk4IN9MqMQPj0Tu3FTMT5SvB_E
+      - REACT_APP_DATABASE_URL=https://hackideas-fe798-default-rtdb.firebaseio.com
+      - CHOKIDAR_USEPOLLING=true

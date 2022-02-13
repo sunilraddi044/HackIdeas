@@ -1,4 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { mockFirebase } from "firestore-jest-mock";
+import { firebase } from "firebase";
+import { mockCollection } from "firestore-jest-mock/mocks/firestore";
+
 import App from "./App";
 import Login from "./Components/login/Login";
 
@@ -26,19 +30,33 @@ test("clicking on sign up, sign in button changes to sign up", () => {
   expect(signinElement).toBeInTheDocument();
 });
 
-test("login credentials", () => {
-  const myMockFn = jest.fn((value) =>
-    ["34", "566", "6643", "5465"].includes(value)
-  );
+// test("login credentials", () => {
+//   const myMockFn = jest.fn((value) =>
+//     ["34", "566", "6643", "5465"].includes(value)
+//   );
 
-  render(<App />);
-  const employeeIdtextbox = screen.getByTestId("employee-id");
-  fireEvent.change(employeeIdtextbox, { target: { value: "322" } });
-  const inputvalue = employeeIdtextbox.value;
-  const signinButton = screen.getByRole("button", { name: "Sign in" });
+//   render(<App />);
+//   const employeeIdtextbox = screen.getByTestId("employee-id");
+//   fireEvent.change(employeeIdtextbox, { target: { value: "322" } });
+//   const inputvalue = employeeIdtextbox.value;
+//   const signinButton = screen.getByRole("button", { name: "Sign in" });
 
-  const spycontainer = jest.spyOn(Login.prototype, "loginHandler");
+//   const spycontainer = jest.spyOn(Login.prototype, "loginHandler");
 
-  fireEvent.click(signinButton);
-  expect(spycontainer).toHaveBeenCalled();
+//   fireEvent.click(signinButton);
+//   expect(spycontainer).toHaveBeenCalled();
+// });
+
+test("testing stuff", () => {
+  const db = firebase.firestore();
+
+  return db
+    .collection("users")
+    .get()
+    .then((userDocs) => {
+      // Assert that a collection ID was referenced
+      expect(mockCollection).toHaveBeenCalledWith("users");
+
+      // Write other assertions here
+    });
 });

@@ -18,6 +18,7 @@ const ShowIdeaCards = () => {
   const [likedIdeas, setLikedIdeas] = useState([]);
 
   useEffect(() => {
+    //getting ideas from data base
     const getIdeas = async () => {
       setIsLoading(true);
       setError(null);

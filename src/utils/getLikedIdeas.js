@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/fire";
 
 export const getLikedIdeas = async (employeeID) => {
@@ -8,4 +8,9 @@ export const getLikedIdeas = async (employeeID) => {
 
   const currentUser = users.find((user) => user.employeeId === employeeID);
   return currentUser;
+};
+
+export const updateDocument = async (table, id, updateItem) => {
+  const document = doc(db, table, id);
+  await updateDoc(document, updateItem);
 };

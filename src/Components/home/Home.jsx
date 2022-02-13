@@ -1,10 +1,18 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { tabs } from "../../DATA/data";
 import classes from "./Home.module.css";
 
 const Home = ({ loginStatus }) => {
   const [activeTab, setActiveTab] = useState("tab1");
+  const history = useHistory();
+
+  const logoClickHandler = (e) => {
+    e.preventDefault();
+    history.replace("/showideas");
+    setActiveTab("tab1");
+  };
 
   // based on the data passed in tabs number of tab will be displayed on navbar
   const showTabs = tabs.map((tab) => {
@@ -34,7 +42,7 @@ const Home = ({ loginStatus }) => {
       className={`navbar navbar-expand-lg navbar-dark mb-3 fixed-top  opacity-75 ${classes.navbarContainer}`}
     >
       <div className="container">
-        <a className="navbar-brand" href="#">
+        <a onClick={logoClickHandler} className="navbar-brand" href="/">
           Hack<small className="text-primary">Ideas</small>
         </a>
 

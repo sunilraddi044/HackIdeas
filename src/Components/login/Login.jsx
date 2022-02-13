@@ -8,13 +8,13 @@ import { setUser } from "../../redux/actions/Actions";
 import Loading from "../UI/Loading";
 
 const Login = ({ setLoginStatus }) => {
-  const ideaCollectionRef = collection(db, "users");
   const [employeeId, setEmployeeId] = useState([]);
-  const history = useHistory();
   const [isLoading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-
   const [signUp, setSignUp] = useState(false);
+
+  const ideaCollectionRef = collection(db, "users");
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const loginTypeHandler = () => {
     setSignUp((prev) => !prev);
@@ -27,6 +27,12 @@ const Login = ({ setLoginStatus }) => {
   const addUserToDB = async (e) => {
     setLoading(true);
     e.preventDefault();
+
+    if (employeeId.length < 5) {
+      alert("Length of employee ID should greater than 4");
+      setLoading(false);
+      return;
+    }
     await addDoc(ideaCollectionRef, { employeeId, likedIdeas: [] });
 
     setEmployeeId("");

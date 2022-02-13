@@ -1,8 +1,7 @@
-import { updateDoc, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { db } from "../../firebase/fire";
-import { getLikedIdeas } from "../../utils/getLikedIdeas";
+
+import { getLikedIdeas, updateDocument } from "../../utils/getLikedIdeas";
 import classes from "./ShowIdea.module.css";
 
 const ShowIdeaCard = ({ setRenderLike, data, setLikedIdeas, likedIdeas }) => {
@@ -19,21 +18,26 @@ const ShowIdeaCard = ({ setRenderLike, data, setLikedIdeas, likedIdeas }) => {
   }, []);
 
   const updateLikes = async (id, likes) => {
-    const ideaDoc = doc(db, "ideas", id);
     const newLikes = { likes: likes + 1, liked: true };
-    await updateDoc(ideaDoc, newLikes);
 
+    //Update Ideas collection with updated likes count
+    await updateDocument("ideas", id, newLikes);
+
+    //getting current users liked documents
     let currentUser = await getLikedIdeas(employeeID);
-    console.log(currentUser);
 
-    const userDoc = doc(db, "users", currentUser.id);
     const newLikedList = { likedIdeas: [...currentUser.likedIdeas, id] };
-    await updateDoc(userDoc, newLikedList);
+
+    //update users collection with number of different ideas liked
+    await updateDocument("users", currentUser.id, newLikedList);
     setRenderLike((prev) => !prev);
+
+    //update state with liked ideas by current user
     currentUser = await getLikedIdeas(employeeID);
     setLikedIdeas(currentUser.likedIdeas);
   };
 
+  //Sort function to sort data by count of likes and creation date of ideas
   const sortDataByLikes = (option) => {
     data.sort((a, b) =>
       a[option] > b[option] ? 1 : b[option] > a[option] ? -1 : 0

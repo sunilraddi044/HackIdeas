@@ -3,12 +3,14 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase/fire";
 import classes from "./AddIdeaForm.module.css";
 import { useSelector } from "react-redux";
+import Loading from "../UI/Loading";
 
 const AddIdeaFrom = () => {
   const ideaCollectionRef = collection(db, "ideas");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [tag, setTag] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.addIdeas.user);
 
   const date = new Date();
@@ -40,8 +42,10 @@ const AddIdeaFrom = () => {
   };
 
   const submitDataHandler = () => {
+    setIsLoading(true);
     if (title === "" || desc === "" || tag === "") {
       alert("Please Provide all the details");
+      setIsLoading(false);
       return;
     }
 
@@ -58,7 +62,13 @@ const AddIdeaFrom = () => {
     addIdea(idea);
     setTitle("");
     setDesc("");
+    alert("Idea added successfully");
+    setIsLoading(false);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div
