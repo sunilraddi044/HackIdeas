@@ -68,3 +68,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Running Dockser for dev
+docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d --build
+
+## Running Dockser for prod
+docker-compose -f docker-compose.yml -f docker-compose-prod.yml up -d --build
